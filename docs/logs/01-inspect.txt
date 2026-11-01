@@ -1,0 +1,19 @@
+$ make toolchain-info
+make -C sw toolchain-info
+make[1]: Entering directory '/workspace/sw'
+TOOLCHAIN_PREFIX=riscv64-unknown-elf-
+CC=riscv64-unknown-elf-gcc
+MARCH=rv32i_zicsr
+riscv64-unknown-elf-gcc (13.2.0-11ubuntu1+12) 13.2.0
+make[1]: Leaving directory '/workspace/sw'
+fusesoc 2.4.7
+Verilator 5.020 2024-01-01 rev (Debian 5.020-1)
+Icarus Verilog version 12.0 (stable) ()
+
+$ fusesoc --cores-root=. core show servant | grep -E 'Name:|Description:|verilator_tb|^sim |^lint |Core file'
+Name:        award-winning:serv:servant:1.4.0
+Description: Simple reference system for SERV
+Core file:   servant.core
+lint                : <No description>
+sim                 : <No description>
+verilator_tb        : <No description>

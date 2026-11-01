@@ -1,0 +1,12 @@
+$ make test_icarus
+make -C sw hello
+make[1]: Entering directory '/workspace/sw'
+make[1]: Nothing to be done for 'hello'.
+make[1]: Leaving directory '/workspace/sw'
+iverilog -o /workspace/sim/icarus/servant_tb.vvp -c sim/rtl.f
+vvp /workspace/sim/icarus/servant_tb.vvp +firmware=/workspace/sw/hello.hex 2>&1 | tee /workspace/sim/logs/icarus-hello.log
+Loading RAM from /workspace/sw/hello.hex
+Hello, SERV!
+Test complete
+servile/servile_mux.v:87: $finish called at 2754133 (1s)
+ALL TESTS PASSED.
