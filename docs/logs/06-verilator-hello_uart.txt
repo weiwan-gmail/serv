@@ -1,0 +1,20 @@
+$ make test_verilator_asm
+fusesoc --cores-root=/workspace run --target=verilator_tb --build-root=/workspace/sim/fusesoc-build servant --uart_baudrate=57600 --timeout=200000000 --firmware=/workspace/sw/hello_uart.hex 2>&1 | tee /workspace/sim/logs/verilator-hello_uart.log
+INFO: Preparing award-winning:serv:serv:1.4.0
+INFO: Preparing award-winning:serv:servile:1.4.0
+INFO: Preparing award-winning:serv:servant:1.4.0
+make[1]: Entering directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+Loading RAM from /workspace/sw/hello_uart.hex
+Hi, I'm Servant!
+Test complete
+- src/award-winning_serv_servile_1.4.0/servile/servile_mux.v:87: Verilog $finish
+SIM DONE after 53739 clock cycles
+verilator_exit=0
+ALL TESTS PASSED.
+Entering directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+Leaving directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+Entering directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+Leaving directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+ALL TESTS PASSED.

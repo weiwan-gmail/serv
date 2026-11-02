@@ -10,6 +10,20 @@ SERV is an award-winning bit-serial RISC-V core
 
 In fact, the award-winning SERV is the world's smallest RISC-V CPU. It's the perfect companion whenever you need a bit of computation and silicon real estate is at a premium.
 
+## Learning tutorial (this fork)
+
+Work on **develop**. Chinese walkthrough: [`docs/TUTORIAL_zh.md`](docs/TUTORIAL_zh.md). Command index: [`docs/LEARNING.md`](docs/LEARNING.md).
+
+```bash
+sudo apt-get install -y iverilog verilator gcc-riscv64-unknown-elf python3 python3-pip build-essential
+pip3 install --user fusesoc
+export PATH="$HOME/.local/bin:$PATH"
+make test_verilator
+# expect: Hello, SERV! / Test complete / ALL TESTS PASSED.
+```
+
+That wraps the upstream FuseSoC `verilator_tb` target. FPGA / Zephyr / RISCOF flows below are unchanged.
+
 How small is it then? Synthesizing the latest version of SERV in its most minimal form, yields the following results for some popular FPGA architectures and a typical CMOS process.
 
 | Lattice iCE40 | Intel Cyclone 10LP | AMD Artix-7 | CMOS   |

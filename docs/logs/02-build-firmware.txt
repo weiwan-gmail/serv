@@ -1,0 +1,54 @@
+$ make -C sw clean hello
+make: Entering directory '/workspace/sw'
+rm -f hello.elf hello.bin hello.hex
+rm -f blinky.elf blinky.bin hello_uart.elf hello_uart.bin
+riscv64-unknown-elf-gcc -nostartfiles -nostdlib -ffreestanding -march=rv32i_zicsr -mabi=ilp32 -Os -Tlink.ld -ohello.elf crt0.S uart.S hello.c
+riscv64-unknown-elf-objcopy -O binary hello.elf hello.bin
+python3 makehex.py hello.bin 2048 > hello.hex
+make: Leaving directory '/workspace/sw'
+
+$ ls -l sw/hello.elf sw/hello.hex
+-rwxr-xr-x 1 ubuntu ubuntu  5044 Nov  1 23:47 sw/hello.elf
+-rw-r--r-- 1 ubuntu ubuntu 18432 Nov  1 23:47 sw/hello.hex
+
+$ riscv64-unknown-elf-objdump -d sw/hello.elf | head -40
+
+sw/hello.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	00002117          	auipc	sp,0x2
+   4:	00010113          	mv	sp,sp
+   8:	038000ef          	jal	40 <main>
+   c:	900002b7          	lui	t0,0x90000
+  10:	0002a023          	sw	zero,0(t0) # 90000000 <_stack+0x8fffe000>
+  14:	0000006f          	j	14 <_start+0x14>
+
+00000018 <uart_putc>:
+  18:	40000337          	lui	t1,0x40000
+  1c:	0ff57293          	zext.b	t0,a0
+  20:	1002e293          	ori	t0,t0,256
+  24:	00129293          	slli	t0,t0,0x1
+  28:	00530023          	sb	t0,0(t1) # 40000000 <_stack+0x3fffe000>
+  2c:	0012d293          	srli	t0,t0,0x1
+  30:	00000013          	nop
+  34:	00000013          	nop
+  38:	fe0298e3          	bnez	t0,28 <uart_putc+0x10>
+  3c:	00008067          	ret
+
+00000040 <main>:
+  40:	ff010113          	addi	sp,sp,-16 # 1ff0 <_end+0x1f62>
+  44:	00812423          	sw	s0,8(sp)
+  48:	00112623          	sw	ra,12(sp)
+  4c:	400007b7          	lui	a5,0x40000
+  50:	00100713          	li	a4,1
+  54:	00e78023          	sb	a4,0(a5) # 40000000 <_stack+0x3fffe000>
+  58:	08000413          	li	s0,128
+  5c:	00044503          	lbu	a0,0(s0)
+  60:	00051a63          	bnez	a0,74 <main+0x34>
+  64:	00c12083          	lw	ra,12(sp)
+  68:	00812403          	lw	s0,8(sp)
+  6c:	01010113          	addi	sp,sp,16
+  70:	00008067          	ret

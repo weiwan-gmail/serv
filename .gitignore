@@ -1,0 +1,23 @@
+# FuseSoC / Edalize (local teaching runs)
+/fusesoc.conf
+/fusesoc_libraries/
+/build/
+/sim/fusesoc-build/
+/sim/logs/
+
+# Icarus / Verilator artefacts
+*.vcd
+*.fst
+*.vvp
+obj_dir/
+/sim/icarus/servant_tb.vvp
+
+# Generated C firmware (committed hex: blinky.hex, hello_uart.hex, zephyr_*.hex)
+/sw/hello.elf
+/sw/hello.bin
+/sw/hello.hex
+/sw/*.o
+/sw/blinky.elf
+/sw/blinky.bin
+/sw/hello_uart.elf
+/sw/hello_uart.bin

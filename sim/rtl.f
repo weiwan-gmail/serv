@@ -1,0 +1,31 @@
+# Servant + SERV + Servile sources for the teaching Icarus path.
+# Verilator continues to go through FuseSoC (servant.core verilator_tb).
+rtl/serv_bufreg.v
+rtl/serv_bufreg2.v
+rtl/serv_alu.v
+rtl/serv_csr.v
+rtl/serv_ctrl.v
+rtl/serv_decode.v
+rtl/serv_immdec.v
+rtl/serv_mem_if.v
+rtl/serv_rf_if.v
+rtl/serv_rf_ram_if.v
+rtl/serv_rf_ram.v
+rtl/serv_state.v
+rtl/serv_debug.v
+rtl/serv_top.v
+rtl/serv_rf_top.v
+rtl/serv_aligner.v
+rtl/serv_compdec.v
+servile/servile_rf_mem_if.v
+servile/servile_mux.v
+servile/servile_arbiter.v
+servile/servile.v
+servant/servant_timer.v
+servant/servant_gpio.v
+servant/servant_mux.v
+servant/servant_ram.v
+servant/servant.v
+bench/servant_sim.v
+bench/uart_decoder.v
+sim/icarus/servant_tb_lite.v

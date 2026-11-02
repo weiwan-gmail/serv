@@ -1,6 +1,9 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include "verilated_vcd_c.h"
 #include "Vservant_sim.h"
@@ -10,6 +13,8 @@
 using namespace std;
 
 static bool done;
+static int exit_code = 0;
+static unsigned long cycles = 0;
 
 vluint64_t main_time = 0;       // Current simulation time
 // This is a 64-bit integer to reduce wrap over issues and
@@ -148,18 +153,24 @@ int main(int argc, char **argv, char **env)
     if (dump)
       tfp->dump(main_time);
     if (baud_rate) {
-      if (do_uart(&uart_context, top->q))
+      if (do_uart(&uart_context, top->q)) {
 	putchar(uart_context.ch);
+	fflush(stdout);
+      }
     } else {
       do_gpio(&gpio_context, top->q);
     }
     if (tf && top->wb_clk && top->pc_vld)
       if (write(tf, (void *)&top->pc_adr, 4) < 0) exit(1);
     if (timeout && (main_time >= timeout)) {
-      printf("Timeout: Exiting at time %lu\n", main_time);
+      printf("TIMEOUT after %lu clock cycles (sim time %lu)\n", cycles, main_time);
+      printf("verilator_exit=2\n");
       done = true;
+      exit_code = 2;
     }
 
+    if (top->wb_clk)
+      cycles++;
     top->wb_clk = !top->wb_clk;
     main_time+=31.25;
 
@@ -172,9 +183,16 @@ int main(int argc, char **argv, char **env)
       }
     }
   }
-  close(cps_file);
-  close(tf);
+  if (cps_file > 0)
+    close(cps_file);
+  if (tf > 0)
+    close(tf);
   if (tfp)
     tfp->close();
-  exit(0);
+  if (exit_code == 0) {
+    printf("SIM DONE after %lu clock cycles\n", cycles);
+    printf("verilator_exit=0\n");
+    printf("ALL TESTS PASSED.\n");
+  }
+  exit(exit_code);
 }

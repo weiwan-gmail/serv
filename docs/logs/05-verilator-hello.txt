@@ -1,0 +1,44 @@
+$ make test_verilator
+make -C sw hello
+make[1]: Entering directory '/workspace/sw'
+riscv64-unknown-elf-gcc -nostartfiles -nostdlib -ffreestanding -march=rv32i_zicsr -mabi=ilp32 -Os -Tlink.ld -ohello.elf crt0.S uart.S hello.c
+riscv64-unknown-elf-objcopy -O binary hello.elf hello.bin
+python3 makehex.py hello.bin 2048 > hello.hex
+make[1]: Leaving directory '/workspace/sw'
+make -C sw hello
+make[1]: Entering directory '/workspace/sw'
+make[1]: Nothing to be done for 'hello'.
+make[1]: Leaving directory '/workspace/sw'
+fusesoc --cores-root=/workspace run --target=verilator_tb --build-root=/workspace/sim/fusesoc-build servant --uart_baudrate=57600 --timeout=200000000 --firmware=/workspace/sw/hello.hex 2>&1 | tee /workspace/sim/logs/verilator-hello.log
+INFO: Preparing award-winning:serv:serv:1.4.0
+INFO: Preparing award-winning:serv:servile:1.4.0
+INFO: Preparing award-winning:serv:servant:1.4.0
+make[1]: Entering directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+verilator -f award-winning_serv_servant_1.4.0.vc
+make -f Vservant_sim.mk
+make[2]: Entering directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -Os -c -o servant_tb.o src/award-winning_serv_servant_1.4.0/bench/servant_tb.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -c -o verilated.o /usr/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -c -o verilated_dpi.o /usr/share/verilator/include/verilated_dpi.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -c -o verilated_vcd_c.o /usr/share/verilator/include/verilated_vcd_c.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -c -o verilated_threads.o /usr/share/verilator/include/verilated_threads.cpp
+/usr/bin/python3 /usr/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vservant_sim.cpp Vservant_sim___024root__DepSet_h03917109__0.cpp Vservant_sim___024root__DepSet_h3f60db9f__0.cpp Vservant_sim_servant__Mz1_Dz2_S1_Cz3_Az3__DepSet_h41b2f64e__0.cpp Vservant_sim_servant_ram__D2000_R4d494e49__DepSet_he4a39403__0.cpp Vservant_sim__Dpi.cpp Vservant_sim__Trace__0.cpp Vservant_sim___024root__Slow.cpp Vservant_sim___024root__DepSet_h03917109__0__Slow.cpp Vservant_sim___024root__DepSet_h3f60db9f__0__Slow.cpp Vservant_sim_servant_sim__Slow.cpp Vservant_sim_servant_sim__DepSet_h698ba515__0__Slow.cpp Vservant_sim_servant_sim__DepSet_h95578f8b__0__Slow.cpp Vservant_sim_servant__Mz1_Dz2_S1_Cz3_Az3__Slow.cpp Vservant_sim_servant__Mz1_Dz2_S1_Cz3_Az3__DepSet_h41b2f64e__0__Slow.cpp Vservant_sim_servant__Mz1_Dz2_S1_Cz3_Az3__DepSet_h7d406260__0__Slow.cpp Vservant_sim_servant_ram__D2000_R4d494e49__Slow.cpp Vservant_sim_servant_ram__D2000_R4d494e49__DepSet_h182fc095__0__Slow.cpp Vservant_sim__Syms.cpp Vservant_sim__Trace__0__Slow.cpp Vservant_sim__TraceDecls__0__Slow.cpp > Vservant_sim__ALL.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-overloaded-virtual -Wno-shadow -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable       -c -o Vservant_sim__ALL.o Vservant_sim__ALL.cpp
+echo "" > Vservant_sim__ALL.verilator_deplist.tmp
+Archive ar -rcs Vservant_sim__ALL.a Vservant_sim__ALL.o
+g++     servant_tb.o verilated.o verilated_dpi.o verilated_vcd_c.o verilated_threads.o Vservant_sim__ALL.a    -pthread -lpthread -latomic   -o Vservant_sim
+rm Vservant_sim__ALL.verilator_deplist.tmp
+make[2]: Leaving directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+make[1]: Leaving directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+Loading RAM from /workspace/sw/hello.hex
+Hello, SERV!
+Test complete
+- src/award-winning_serv_servile_1.4.0/servile/servile_mux.v:87: Verilog $finish
+SIM DONE after 44423 clock cycles
+verilator_exit=0
+ALL TESTS PASSED.
+Entering directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+Leaving directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+Entering directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+Leaving directory '/workspace/sim/fusesoc-build/award-winning_serv_servant_1.4.0/verilator_tb'
+ALL TESTS PASSED.
