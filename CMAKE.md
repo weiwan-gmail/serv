@@ -19,7 +19,7 @@ flowchart LR
   conan --> sim
 ```
 
-`cmake-system` uses the machine Verilator kit. `cmake-conan` uses Conan 2 plus the local `recipes/verilator` (packages the system kit on Linux; [withlimon](https://github.com/withlimon/verilator-windows) `verilator_bin.exe` PE on Windows). Shared helpers live in `cmake/`: kit locate, MSVC `-fcoroutines*` strip, `ExpectPass.cmake`. `sc_time_stamp` is already in `bench/servant_tb.cpp`.
+`cmake-system` uses the machine Verilator kit. `cmake-conan` uses Conan 2 plus the local `recipes/verilator` (packages the system kit on Linux; [withlimon](https://github.com/withlimon/verilator-windows) `verilator_bin.exe` PE on Windows). Shared helpers live in `cmake/`: kit locate, MSVC `-fcoroutines*` strip plus `/bigobj` `/Zc:__cplusplus`, `ExpectPass.cmake`. `sc_time_stamp` is already in `bench/servant_tb.cpp`. Host TB I/O is `#if defined(_WIN32)` / `_MSC_VER` guarded.
 
 ## Linux (proven)
 
@@ -43,9 +43,11 @@ Expect `Hello, SERV!` / `Test complete` / `verilator_exit=0` / `ALL TESTS PASSED
 
 Evidence: [`cmake-system/PASS_EVIDENCE.md`](cmake-system/PASS_EVIDENCE.md), [`cmake-conan/PASS_EVIDENCE.md`](cmake-conan/PASS_EVIDENCE.md).
 
-## Windows (follow-up)
+## Windows (MSVC)
 
-Drive **`verilator_bin.exe`** (PE), never extensionless Perl `verilator`. Notes: [`cmake-system/WINDOWS.md`](cmake-system/WINDOWS.md). `bench/servant_tb.cpp` is POSIX (`unistd.h`); prefer MinGW or WSL until a PC2023 re-run.
+Drive **`verilator_bin.exe`** (PE), never extensionless Perl `verilator`. Notes: [`cmake-system/WINDOWS.md`](cmake-system/WINDOWS.md).
+
+`bench/servant_tb.cpp` is `#if defined(_WIN32)` / `_MSC_VER` guarded (no `<unistd.h>` on MSVC). CMake adds `/bigobj` `/Zc:__cplusplus` and still strips `-fcoroutines*`. A full PC2023 `--target sim` log is a follow-up (`WINDOWS_PASS_EVIDENCE.md`); the C1083 include is fixed in source.
 
 ## Layout
 

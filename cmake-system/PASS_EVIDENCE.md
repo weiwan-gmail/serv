@@ -1,6 +1,6 @@
 # cmake-system PASS evidence (Linux Cursor VM)
 
-Recorded **2026-11-02** on this Cloud Agent Linux VM (`cursor`, Ubuntu, x86_64). Self-contained Servant Verilator sim (existing `bench/servant_tb.cpp` + `servant_sim` RTL). FuseSoC / `Makefile` / `verif/` were **not** used and were **not** edited.
+Recorded **2026-11-02** on this Cloud Agent Linux VM (`cursor`, Ubuntu, x86_64), **re-run after** the MSVC `#if` TB port. Self-contained Servant Verilator sim (`bench/servant_tb.cpp` + `servant_sim` RTL). FuseSoC / `Makefile` / `verif/` were **not** used and were **not** edited.
 
 | Tool | Version |
 |------|---------|
@@ -10,7 +10,7 @@ Recorded **2026-11-02** on this Cloud Agent Linux VM (`cursor`, Ubuntu, x86_64).
 | RISC-V GCC | `riscv64-unknown-elf-gcc` 13.2.0 (builds `sw/hello.hex`) |
 | Conan | not used in this tree |
 
-Windows PC2023 (withlimon `verilator_bin.exe`, worker `D:\CursorWorker`) is a **follow-up**: [`WINDOWS.md`](WINDOWS.md), [`WINDOWS_PASS_EVIDENCE.md`](WINDOWS_PASS_EVIDENCE.md).
+Windows MSVC TB compile (C1083 `unistd.h` fixed in source): [`WINDOWS.md`](WINDOWS.md), [`WINDOWS_PASS_EVIDENCE.md`](WINDOWS_PASS_EVIDENCE.md). Full PC2023 `--target sim` log remains a follow-up (this VM has no `cl.exe`).
 
 Make path spot-check (unchanged): `make test_icarus` still prints `Hello, SERV!` / `Test complete` / `ALL TESTS PASSED.`
 

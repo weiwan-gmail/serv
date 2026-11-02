@@ -8,4 +8,4 @@ cmake --build build-system --target sim
 ctest --test-dir build-system --output-on-failure
 ```
 
-Linux evidence: [`PASS_EVIDENCE.md`](PASS_EVIDENCE.md). Windows (follow-up): [`WINDOWS.md`](WINDOWS.md), `.\build_sim.ps1`.
+Linux evidence: [`PASS_EVIDENCE.md`](PASS_EVIDENCE.md). Windows MSVC: [`WINDOWS.md`](WINDOWS.md), `.\build_sim.ps1` (TB is `#if` guarded; engine is `verilator_bin.exe`).

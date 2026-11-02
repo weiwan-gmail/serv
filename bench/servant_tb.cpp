@@ -1,16 +1,96 @@
 #include <fcntl.h>
+#include <stdarg.h>
 #include <stdint.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <ctime>
+
+/* Host C++: Linux gcc + Windows MSVC.
+ * MSVC has no <unistd.h> (PC2023 C1083). Do not #define open — that would
+ * rewrite VerilatedVcdC::open. sleep() is unused here; map it for MSVC. */
+#if defined(_WIN32)
+# include <io.h>
+# include <sys/stat.h>
+# if defined(_MSC_VER)
+#  ifndef WIN32_LEAN_AND_MEAN
+#   define WIN32_LEAN_AND_MEAN
+#  endif
+#  ifndef NOMINMAX
+#   define NOMINMAX
+#  endif
+#  include <windows.h>
+#  ifndef S_IRWXU
+#   define S_IRWXU (_S_IREAD | _S_IWRITE)
+#  endif
+# else
+#  include <unistd.h>
+# endif
+#else
+# include <unistd.h>
+#endif
+
+#ifndef O_BINARY
+# if defined(_WIN32)
+#  define O_BINARY _O_BINARY
+# else
+#  define O_BINARY 0
+# endif
+#endif
 
 #include "verilated_vcd_c.h"
 #include "Vservant_sim.h"
 
-#include <ctime>
-
 using namespace std;
+
+static int tb_open_trunc(const char *path)
+{
+#if defined(_WIN32) && defined(_MSC_VER)
+  return _open(path, _O_WRONLY | _O_CREAT | _O_TRUNC | _O_BINARY,
+               _S_IREAD | _S_IWRITE);
+#else
+  return open(path, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IRWXU);
+#endif
+}
+
+static int tb_write(int fd, const void *buf, unsigned n)
+{
+#if defined(_WIN32) && defined(_MSC_VER)
+  return _write(fd, buf, n);
+#else
+  return (int)write(fd, buf, n);
+#endif
+}
+
+static void tb_close(int fd)
+{
+#if defined(_WIN32) && defined(_MSC_VER)
+  _close(fd);
+#else
+  close(fd);
+#endif
+}
+
+static int tb_dprintf(int fd, const char *fmt, ...)
+{
+  char buf[128];
+  va_list ap;
+  va_start(ap, fmt);
+  int n = vsnprintf(buf, sizeof(buf), fmt, ap);
+  va_end(ap);
+  if (n <= 0)
+    return n;
+  if (n >= (int)sizeof(buf))
+    n = (int)sizeof(buf) - 1;
+  return tb_write(fd, buf, (unsigned)n);
+}
+
+/* sleep() lives in unistd.h; MSVC uses Sleep(). Unused in this TB. */
+#if defined(_WIN32) && defined(_MSC_VER)
+# define tb_sleep(sec) Sleep((sec) * 1000u)
+#else
+# define tb_sleep(sec) sleep(sec)
+#endif
 
 static bool done;
 static int exit_code = 0;
@@ -38,7 +118,7 @@ typedef struct {
 void do_gpio(gpio_context_t *context, bool gpio) {
   if (context->last_value != gpio) {
     context->last_value = gpio;
-    printf("%lu output q is %s\n", main_time, gpio ? "ON" : "OFF");
+    printf("%llu output q is %s\n", (unsigned long long)main_time, gpio ? "ON" : "OFF");
   }
 }
 
@@ -91,6 +171,7 @@ bool do_uart(uart_context_t *context, bool rx) {
 
 int main(int argc, char **argv, char **env)
 {
+  (void)env;
   int baud_rate = 0;
 
   gpio_context_t gpio_context;
@@ -121,7 +202,7 @@ int main(int argc, char **argv, char **env)
   int tf = 0;
   const char *arg_trace_pc = Verilated::commandArgsPlusMatch("trace_pc=");
   if (arg_trace_pc[0])
-    tf = open("trace.bin", O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
+    tf = tb_open_trunc("trace.bin");
 
   vluint64_t timeout = 0;
   const char *arg_timeout = Verilated::commandArgsPlusMatch("timeout=");
@@ -139,7 +220,7 @@ int main(int argc, char **argv, char **env)
   int cps_file = 0;
   const char *arg_cps = Verilated::commandArgsPlusMatch("cps=");
   if (arg_cps[0])
-    cps_file = open("cps", O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
+    cps_file = tb_open_trunc("cps");
 
   bool dump = false;
   top->wb_clk = 1;
@@ -161,9 +242,10 @@ int main(int argc, char **argv, char **env)
       do_gpio(&gpio_context, top->q);
     }
     if (tf && top->wb_clk && top->pc_vld)
-      if (write(tf, (void *)&top->pc_adr, 4) < 0) exit(1);
+      if (tb_write(tf, (void *)&top->pc_adr, 4) < 0) exit(1);
     if (timeout && (main_time >= timeout)) {
-      printf("TIMEOUT after %lu clock cycles (sim time %lu)\n", cycles, main_time);
+      printf("TIMEOUT after %llu clock cycles (sim time %llu)\n",
+             (unsigned long long)cycles, (unsigned long long)main_time);
       printf("verilator_exit=2\n");
       done = true;
       exit_code = 2;
@@ -177,20 +259,20 @@ int main(int argc, char **argv, char **env)
     if (cps_file) {
       cur_cycle++;
       if (std::time(nullptr) > last_time) {
-	dprintf(cps_file,"%d\n", (cur_cycle-last_cycle)/2);
+	tb_dprintf(cps_file,"%d\n", (cur_cycle-last_cycle)/2);
 	last_cycle = cur_cycle;
 	last_time++;
       }
     }
   }
   if (cps_file > 0)
-    close(cps_file);
+    tb_close(cps_file);
   if (tf > 0)
-    close(tf);
+    tb_close(tf);
   if (tfp)
     tfp->close();
   if (exit_code == 0) {
-    printf("SIM DONE after %lu clock cycles\n", cycles);
+    printf("SIM DONE after %llu clock cycles\n", (unsigned long long)cycles);
     printf("verilator_exit=0\n");
     printf("ALL TESTS PASSED.\n");
   }
