@@ -1,6 +1,6 @@
 # cmake-conan PASS evidence (Linux Cursor VM)
 
-Recorded **2026-11-02** on this Cloud Agent Linux VM (`cursor`, Ubuntu, x86_64). Same `sim_servant` as cmake-system via [`../cmake/ServantSim.cmake`](../cmake/ServantSim.cmake). FuseSoC / `Makefile` / `verif/` were **not** used and were **not** edited.
+Recorded **2026-11-02** on this Cloud Agent Linux VM (`cursor`, Ubuntu, x86_64), **re-run after** the MSVC `#if` TB port. Same `sim_servant` as cmake-system via [`../cmake/ServantSim.cmake`](../cmake/ServantSim.cmake). FuseSoC / `Makefile` / `verif/` were **not** used and were **not** edited.
 
 | Tool | Version |
 |------|---------|
@@ -10,7 +10,7 @@ Recorded **2026-11-02** on this Cloud Agent Linux VM (`cursor`, Ubuntu, x86_64).
 | Conan | **2.34.0** (`pip install --user conan`) |
 | RISC-V GCC | `riscv64-unknown-elf-gcc` 13.2.0 |
 
-Windows PC2023 (Conan 2.34 + withlimon `verilator_bin.exe`) is a **follow-up**: [`../cmake-system/WINDOWS.md`](../cmake-system/WINDOWS.md), [`WINDOWS_PASS_EVIDENCE.md`](WINDOWS_PASS_EVIDENCE.md).
+Windows MSVC TB is the same `#if` port as cmake-system. Full PC2023 `--target sim` (Conan 2.34 + withlimon `verilator_bin.exe`) remains a follow-up: [`../cmake-system/WINDOWS.md`](../cmake-system/WINDOWS.md), [`WINDOWS_PASS_EVIDENCE.md`](WINDOWS_PASS_EVIDENCE.md).
 
 ## Configure
 

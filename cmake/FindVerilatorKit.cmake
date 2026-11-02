@@ -5,7 +5,8 @@
 #   (withlimon: https://github.com/withlimon/verilator-windows). Never the
 #   extensionless Perl `verilator` (Explorer/CMD Open-with trap).
 # - include(CheckCXXCompilerFlag) before verilate() (caller).
-# - On MSVC, strip GCC-only -fcoroutines* flags Verilator may inject.
+# - On MSVC, strip GCC-only -fcoroutines* flags Verilator may inject,
+#   then add /bigobj and /Zc:__cplusplus.
 
 include_guard(GLOBAL)
 
@@ -203,4 +204,7 @@ function(serv_strip_msvc_gcc_flags target)
       set_property(TARGET ${target} PROPERTY ${_prop} "${_opts}")
     endif()
   endforeach()
+  # Verilator models can exceed the default COFF section limit (C1128).
+  # /Zc:__cplusplus so Verilated headers see C++17, not MSVC's 199711L default.
+  target_compile_options(${target} PRIVATE /bigobj /Zc:__cplusplus)
 endfunction()

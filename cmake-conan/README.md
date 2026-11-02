@@ -14,4 +14,4 @@ ctest --test-dir build-conan --output-on-failure
 
 If Conan is missing, use `cmake-system/` instead. `conan install` uses `--no-remote`.
 
-Windows: [withlimon](https://github.com/withlimon/verilator-windows) **`verilator_bin.exe`**, `.\build_sim.ps1`. MSVC: `CheckCXXCompilerFlag` before `verilate()`, then strip `-fcoroutines*`.
+Windows: [withlimon](https://github.com/withlimon/verilator-windows) **`verilator_bin.exe`**, `.\build_sim.ps1`. MSVC: TB `#if defined(_WIN32)` / `_MSC_VER` guards (no `unistd.h`); `CheckCXXCompilerFlag` then strip `-fcoroutines*`; `/bigobj` `/Zc:__cplusplus`.

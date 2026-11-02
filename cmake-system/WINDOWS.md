@@ -30,9 +30,19 @@ The withlimon tarball does **not** ship `verilator-config.cmake`. Shared helper 
 
 MSYS2 unpack: `C:\msys64\mingw64\bin\verilator_bin.exe`. Do **not** run `C:\msys64\mingw64\share\verilator\bin\verilator_bin.exe` (Perl wrapper with a `.exe` suffix). CMake, `build_sim.ps1`, and the Conan recipe MZ-check `verilator_bin.exe`.
 
-## POSIX TB
+## POSIX / MSVC TB
 
-`bench/servant_tb.cpp` is the **existing** FuseSoC Verilator driver (`unistd.h`, `fcntl.h`, `dprintf`). On Windows prefer **MinGW g++** or WSL. MSVC needs a TB port (not in this PR). Coroutine strip is still wired for MSVC (`CheckCXXCompilerFlag` then drop `-fcoroutines*`).
+`bench/servant_tb.cpp` is the existing FuseSoC Verilator driver. Host I/O is
+`#if defined(_WIN32)` / `_MSC_VER` guarded:
+
+| API | Linux gcc | Windows MSVC |
+|-----|-----------|----------------|
+| headers | `<unistd.h>` | `<io.h>` + `<windows.h>` — **no** `<unistd.h>` (C1083) |
+| open/write/close | `open` / `write` / `close` | `_open` / `_write` / `_close` (do **not** `#define open`; that rewrites `VerilatedVcdC::open`) |
+| dprintf | GNU `dprintf` replacement `tb_dprintf` | `vsnprintf` + `_write` |
+| sleep | `sleep()` (unused in this TB) | `Sleep()` |
+
+CMake MSVC: `CheckCXXCompilerFlag` then drop `-fcoroutines*`, plus `/bigobj` and `/Zc:__cplusplus`. Engine is still **`verilator_bin.exe`**.
 
 ## cmake-system
 
