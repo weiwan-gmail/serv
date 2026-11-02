@@ -61,6 +61,13 @@ fusesoc --cores-root=. run --target=verilator_tb servant \
 fusesoc --cores-root=. run --target=lint serv
 ```
 
+Optional CMake dual-tree (does **not** replace the Make path): **[CMAKE.md](../CMAKE.md)**.
+
+```bash
+cmake -S cmake-system -B build-system -DCMAKE_BUILD_TYPE=Release
+cmake --build build-system --target sim
+```
+
 ## How to read PASS / FAIL
 
 | Check | Meaning |
