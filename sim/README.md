@@ -20,3 +20,5 @@ fusesoc --cores-root=. run --target=verilator_tb --build-root=sim/fusesoc-build 
 | `fusesoc-build/` | Gitignored FuseSoC work root |
 
 `bench/servant_tb.cpp` is the official Verilator driver (clock, UART decode, timeout). It was only extended so a timeout exits non-zero and a `$finish` prints `ALL TESTS PASSED.`
+
+Optional CMake (same TB/RTL, no FuseSoC): [`../CMAKE.md`](../CMAKE.md).

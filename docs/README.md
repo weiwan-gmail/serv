@@ -3,6 +3,7 @@
 - **[TUTORIAL_zh.md](TUTORIAL_zh.md)** — Chinese primary tutorial (Wei)
 - **[TUTORIAL.md](TUTORIAL.md)** — English summary
 - **[LEARNING.md](LEARNING.md)** — command index / 学习入口
+- **[CMAKE.md](../CMAKE.md)** — optional cmake-system / cmake-conan dual-tree
 - **[logs/](logs/)** — real command output from a green run
 
 Upstream Sphinx manual stays in [`../doc/`](../doc/) (no `s`).

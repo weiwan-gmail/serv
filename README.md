@@ -22,7 +22,7 @@ make test_verilator
 # expect: Hello, SERV! / Test complete / ALL TESTS PASSED.
 ```
 
-That wraps the upstream FuseSoC `verilator_tb` target. FPGA / Zephyr / RISCOF flows below are unchanged.
+That wraps the upstream FuseSoC `verilator_tb` target. FPGA / Zephyr / RISCOF flows below are unchanged. Optional CMake dual-tree (system Verilator / Conan 2): [`CMAKE.md`](CMAKE.md).
 
 How small is it then? Synthesizing the latest version of SERV in its most minimal form, yields the following results for some popular FPGA architectures and a typical CMOS process.
 

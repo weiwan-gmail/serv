@@ -12,6 +12,13 @@
 obj_dir/
 /sim/icarus/servant_tb.vvp
 
+# Optional CMake dual-tree (cmake-system / cmake-conan)
+/build-system/
+/build-conan/
+/cmake-system/build/
+/cmake-conan/build/
+CMakeUserPresets.json
+
 # Generated C firmware (committed hex: blinky.hex, hello_uart.hex, zephyr_*.hex)
 /sw/hello.elf
 /sw/hello.bin
